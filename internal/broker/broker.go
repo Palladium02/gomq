@@ -8,10 +8,12 @@ import (
 
 type Broker struct {
 	KeyPair *rsa.PrivateKey
+	Topics  map[string]Connection
 }
 
 var broker Broker = Broker{
 	KeyPair: crypto.GenerateKeyPair(),
+	Topics:  make(map[string]Connection),
 }
 
 func Create() {
@@ -23,7 +25,8 @@ func Create() {
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			panic(err)
+			// panic(err)
+			continue
 		}
 		go establishConnection(conn)
 	}
@@ -37,5 +40,5 @@ func establishConnection(conn net.Conn) {
 		_ = conn.Close()
 		return
 	}
-	
+
 }
